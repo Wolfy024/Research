@@ -1,4 +1,4 @@
-def remove_extra_files(folder_1: str, folder_2: str = None, extensions: list = None) -> None:
+def remove_extra_files(folder_1: str, folder_2: str = None, extensions: str = None) -> None:
     """
     Remove files that are not common between two folders or match the specified extensions.
 

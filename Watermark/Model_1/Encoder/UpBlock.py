@@ -1,19 +1,22 @@
 import torch.nn as nn
 import torch.nn.functional as F
-
+from DownBlock import ConvBlock
+from torch import cat
 
 class ConvUpBlock(nn.Module):
-    def __init__(self, out_channels, kernel_size=3, stride=1, padding=2, dilation=2, padding_mode='reflect'):
-        super().__init__(ConvUpBlock, self)
-        self.lazy_conv1 = nn.LazyConvTranspose2d(out_channels,
-                                                 kernel_size,
-                                                 stride,
-                                                 padding,
-                                                 dilation,
-                                                 padding_mode=padding_mode)
-        self.lazy_instance_norm = nn.LazyInstanceNorm2d()
+    def __init__(self, in_channels, out_channels, kernel_size=2, stride=2, padding=0):
+        super(ConvUpBlock, self).__init__()
+        self.up_conv1 = nn.ConvTranspose2d(in_channels,
+                                           out_channels,
+                                           kernel_size,
+                                           stride,
+                                           padding)
+        self.conv_block = ConvBlock(in_channels, out_channels)
+        self.relu = nn.ReLU()
 
-    def forward(self, x):
-        x = F.relu(self.lazy_instance_norm(self.lazy_conv1(x)))
+    def forward(self, x, y=None):
+        if y is None:
+            return self.relu(self.up_conv1(x))
+        x = self.up_conv1(x)
+        x = self.conv_block(cat((x, y), 1))
         return x
-    

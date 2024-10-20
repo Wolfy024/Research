@@ -7,23 +7,31 @@ from UpBlock import ConvUpBlock
 
 class UNET(nn.Module):
     def __init__(self):
-        super().__init__(self, UNET)
-        self.down1 = ConvBlock.ConvDownBlock(64, max_pool=False)
-        self.down2 = ConvBlock.ConvDownBlock(128, max_pool=True)
-        self.down3 = ConvBlock.ConvDownBlock(256, max_pool=True)
-        self.bottleneck = ConvBlock.ConvDownBlock(512, max_pool=True)
-        self.up1 = ConvUpBlock(256)
-        self.up2 = ConvUpBlock(128)
-        self.up3 = ConvUpBlock(64)
-        self.up4 = ConvUpBlock(3)
+        super(UNET, self).__init__()  # Corrected line
+        self.down1 = ConvBlock(3, 64)
+        self.down2 = ConvBlock(64, 128)
+        self.down3 = ConvBlock(128, 256)
+        self.bottleneck = ConvBlock(256, 512)
+        self.up1 = ConvUpBlock(512, 256)
+        self.up2 = ConvUpBlock(256, 128)
+        self.up3 = ConvUpBlock(128, 64)
+        self.conv_final = ConvUpBlock(64, 3, kernel_size=1, stride=1, padding=0)
 
-    def forward(self, x):
+    def forward(self, x, bottleneck=False):
         x1 = self.down1(x)
-        x2 = self.down2(x1)
-        x3 = self.down3(x2)
-        x = self.bottleneck(x3)
-        x = self.up1(cat((x, x3), 1))
-        x = self.up2(cat((x, x2), 1))
-        x = self.up3(cat((x, x1), 1))
-        x = self.up4(cat((x, x), 1))
-        return x
+        x2 = self.down2(x1, max_pool=True)
+        x3 = self.down3(x2, max_pool=True)
+        x = self.bottleneck(x3, max_pool=True)
+        if bottleneck:
+            return x
+        x = self.up1(x, x3)
+        x = self.up2(x, x2)
+        x = self.up3(x, x1)
+        x = self.conv_final(x)
+        return F.tanh(x)
+
+
+if __name__ == "__main__":
+    import torch
+    model = UNET().to('cuda')
+    print(model(torch.randn(1, 3, 256, 256).to('cuda')).shape)
