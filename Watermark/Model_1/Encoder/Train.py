@@ -23,8 +23,6 @@ def train(model, criterion, optimizer, TRAIN_LOADER, VAL_LOADER, total_epochs, c
     return running_loss
 
 
-
-
 def validate(model, val_loader):
     import matplotlib.pyplot as plt
     import config
@@ -55,10 +53,8 @@ def validate(model, val_loader):
 def main(folder1, transforms):
     import Model
     import config
-    import torchvision.transforms as transforms
-    import DataStream.datastream as datastream
+    import Watermark.Model_1.Encoder.DataStream.datastream as datastream
     from torch.utils.data import DataLoader, random_split
-    from PreProcessingFunctions import RemoveExtraFiles
     torch.manual_seed(42)
     torch.cuda.manual_seed(42)
     model = Model.UNET().to(config.device)
