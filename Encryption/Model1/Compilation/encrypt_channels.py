@@ -5,8 +5,7 @@ import numpy as np
 from Generate_Sequences import generate_keys, generate_chaotic_sequences
 
 
-def encrypt_channels(encoder1, chaos1, chaos2, chaos3,
-                     img_pth=r'C:\Users\viraj\PycharmProjects\Research\data\Abyssinian_8.jpg'):
+def encrypt_channels(encoder1, chaos1, chaos2, chaos3, img_pth):
     transformations = transforms.Compose([
         transforms.ToTensor(),
         transforms.Resize((256, 256)),
@@ -16,12 +15,10 @@ def encrypt_channels(encoder1, chaos1, chaos2, chaos3,
     image_path = img_pth
     image = Image.open(image_path)
     transformed_image = transformations(image).to('cuda')
-
-    time_steps_channel1, time_steps_channel2, time_steps_channel3 = generate_keys(encoder1)
-
-    output_1 = generate_chaotic_sequences(chaos1).view(-1, 1024, 3)
-    output_2 = generate_chaotic_sequences(chaos2).view(-1, 1024, 3)
-    output_3 = generate_chaotic_sequences(chaos3).view(-1, 1024, 3)
+    time_steps_channel1, time_steps_channel2, time_steps_channel3 = encoder1
+    output_1 = chaos1.view(-1, 1024, 3)
+    output_2 = chaos2.view(-1, 1024, 3)
+    output_3 = chaos3.view(-1, 1024, 3)
 
     # Process each channel
     for channel in range(3):

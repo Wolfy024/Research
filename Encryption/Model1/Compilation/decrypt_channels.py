@@ -8,11 +8,11 @@ from Generate_Sequences import generate_keys, generate_chaotic_sequences
 def decrypt_channels(encoder1, chaos1, chaos2, chaos3, encrypted_image):
     # Initialize the output image tensor
     output_image = encrypted_image.clone()
-    time_steps_channel1, time_steps_channel2, time_steps_channel3 = generate_keys(encoder1)
+    time_steps_channel1, time_steps_channel2, time_steps_channel3 = encoder1
 
-    output_1 = generate_chaotic_sequences(chaos1).view(-1, 1024, 3)
-    output_2 = generate_chaotic_sequences(chaos2).view(-1, 1024, 3)
-    output_3 = generate_chaotic_sequences(chaos3).view(-1, 1024, 3)
+    output_1 = chaos1.view(-1, 1024, 3)
+    output_2 = chaos2.view(-1, 1024, 3)
+    output_3 = chaos3.view(-1, 1024, 3)
 
     # Process each channel
     for channel in range(3):

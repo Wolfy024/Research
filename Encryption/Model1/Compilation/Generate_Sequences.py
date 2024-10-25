@@ -1,16 +1,14 @@
-from torchvision import transforms
-from Encryption.Encoder.Encoder import Encoder
+from Encryption.Model1.Encoder.Encoder import Encoder
 import torch
-from PIL import Image
-from Encryption.ChaoticSequence.ChaosModel import ChaosLSTM
-from Encryption.XorSequence.xor_model import XORTrainer
+from Encryption.Model1.ChaoticSequence.ChaosModel import ChaosLSTM
+from Encryption.Model1.XorSequence.xor_model import XORTrainer
 
 
-def generate_keys(key: float):
-    torch.manual_seed(42)
-    torch.cuda.manual_seed(42)
+def generate_keys(key: float, seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
     model_Encoder = Encoder(1, 3, 256, 256).to('cuda')
-    model_path_encoder = r'C:\Users\viraj\PycharmProjects\Research\Encryption\Encoder\Models\encoder_5_-453522895.25.pt'
+    model_path_encoder = r'C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\Encoder\Models\encoder_5_-453522895.25.pt'
     model_Encoder.load_state_dict(torch.load(model_path_encoder))
     time_steps_channel1 = model_Encoder(torch.tensor(float(key),
                                                      dtype=torch.float32).unsqueeze(0).to('cuda')).to('cuda')
@@ -23,22 +21,22 @@ def generate_keys(key: float):
     return time_steps_channel1, time_steps_channel2, time_steps_channel3
 
 
-def generate_chaotic_sequences(input_1):
-    torch.manual_seed(42)
-    torch.cuda.manual_seed(42)
+def generate_chaotic_sequences(input_1, seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
     model_Chaos = ChaosLSTM(1, 1024, 3).to('cuda')
-    model_path_chaos = r'C:\Users\viraj\PycharmProjects\Research\Encryption\ChaoticSequence\Models\model_11_-18.13003482669592.pt'
+    model_path_chaos = r'C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\ChaoticSequence\Models\model_11_-18.13003482669592.pt'
     model_Chaos.load_state_dict(torch.load(model_path_chaos))
     user_input_key_1 = torch.tensor(float(input_1), dtype=torch.float32).unsqueeze(0).to('cuda')
     user_input_key_1 = model_Chaos(user_input_key_1).to('cuda')
     return user_input_key_1
 
 
-def generate_xor_keys(key: float):
-    torch.manual_seed(42)
-    torch.cuda.manual_seed(42)
+def generate_xor_keys(key: float, seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
     model_Encoder = XORTrainer(1, 3, 256).to('cuda')
-    model_path_encoder = r'C:\Users\viraj\PycharmProjects\Research\Encryption\XorSequence\Models\encoder_1_-13545578.646972656.pt'
+    model_path_encoder = r'C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\XorSequence\Models\encoder_1_-13545578.646972656.pt'
     model_Encoder.load_state_dict(torch.load(model_path_encoder))
     time_steps_channel1 = model_Encoder(torch.tensor(float(key),
                                                      dtype=torch.float32).unsqueeze(0).to('cuda')).to('cuda')
