@@ -2,10 +2,10 @@ import torch
 from torchvision import transforms
 from PIL import Image
 import numpy as np
-from Generate_Sequences import generate_keys, generate_chaotic_sequences
+from Encryption.Model1.Compilation.Generate_Sequences import generate_keys, generate_chaotic_sequences
 
 
-def encrypt_channels(encoder1, chaos1, chaos2, chaos3, img_pth):
+def encrypt_channels(encoder1, encoder2, encoder3, chaos1, chaos2, chaos3, img_pth):
     transformations = transforms.Compose([
         transforms.ToTensor(),
         transforms.Resize((256, 256)),
@@ -15,7 +15,9 @@ def encrypt_channels(encoder1, chaos1, chaos2, chaos3, img_pth):
     image_path = img_pth
     image = Image.open(image_path)
     transformed_image = transformations(image).to('cuda')
-    time_steps_channel1, time_steps_channel2, time_steps_channel3 = encoder1
+    time_steps_channel1 = encoder1[0]
+    time_steps_channel2 = encoder2[1]
+    time_steps_channel3 = encoder3[2]
     output_1 = chaos1.view(-1, 1024, 3)
     output_2 = chaos2.view(-1, 1024, 3)
     output_3 = chaos3.view(-1, 1024, 3)
