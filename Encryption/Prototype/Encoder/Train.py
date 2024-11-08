@@ -24,8 +24,8 @@ def train(encoder, criterion, optimizer, data_loader, num_epochs):
 # Main function for testing
 if __name__ == "__main__":
     from torch import optim
-    from Encryption.Model1.Encoder.Encoder import Encoder
-    from Encryption.Model1.Encoder.lossfn import MaxVarianceLossWithPenalty
+    from Encryption.Prototype.Encoder.Encoder import Encoder
+    from Encryption.Prototype.Encoder.lossfn import MaxVarianceLossWithPenalty
     import torch
     from torch.utils.data import DataLoader, TensorDataset
 

@@ -1,4 +1,4 @@
-from Encryption.Model1.data import Datastream, ChaoticData
+from Encryption.Prototype.data import Datastream, ChaoticData
 import random
 from ChaosModel import ChaosLSTM
 from torch.utils.data import DataLoader

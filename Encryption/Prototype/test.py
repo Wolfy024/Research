@@ -1,69 +1,69 @@
-# import OpenEXR
-# import numpy as np
-# import matplotlib.pyplot as plt
-# from skimage.metrics import structural_similarity as ssim
-#
-# def calculate_entropy(data):
-#     hist, _ = np.histogram(data, bins=256, range=(0, 1))
-#     hist = hist[hist > 0]  # Ignore zero entries
-#     probabilities = hist / hist.sum()
-#     return -np.sum(probabilities * np.log2(probabilities))
-#
-# def analyze_exr_file(filename, reference=None):
-#     file = OpenEXR.InputFile(filename)
-#     header = file.header()
-#     dw = header['dataWindow']
-#     width = dw.max.x + 1
-#     height = dw.max.y + 1
-#
-#     channels = []
-#     for channel_name in header['channels']:
-#         channel_data = np.frombuffer(file.channel(channel_name), dtype=np.float32).reshape((height, width))
-#         channels.append(channel_data)
-#
-#     for i, channel in enumerate(channels):
-#         print(f"Channel {i + 1} Analysis:")
-#         mean = np.mean(channel)
-#         std_dev = np.std(channel)
-#         min_val = np.min(channel)
-#         max_val = np.max(channel)
-#         variance = std_dev ** 2
-#         entropy = calculate_entropy(channel.flatten())
-#
-#         print(f"  - Mean: {mean}")
-#         print(f"  - Standard Deviation: {std_dev}")
-#         print(f"  - Variance: {variance}")
-#         print(f"  - Min: {min_val}")
-#         print(f"  - Max: {max_val}")
-#         print(f"  - Entropy: {entropy}")
-#
-#         plt.hist(channel.flatten(), bins=256, range=(0, 1))
-#         plt.title(f"Histogram of Channel {i + 1}")
-#         plt.xlabel("Pixel Value")
-#         plt.ylabel("Frequency")
-#         plt.show()
-#
-#         # If a reference image is provided, calculate PSNR and SSIM
-#         if reference is not None:
-#             # Assuming reference has the same dimensions and number of channels
-#             psnr = 20 * np.log10(np.max(reference) / np.sqrt(np.mean((reference - channel) ** 2)))
-#             ssim_index = ssim(reference, channel, data_range=channel.max() - channel.min())
-#             print(f"  - PSNR: {psnr:.2f} dB")
-#             print(f"  - SSIM: {ssim_index:.4f}")
-#
-#         # Correlation Coefficient
-#         if len(channels) > 1:
-#             corr_matrix = np.corrcoef([channel.flatten() for channel in channels])
-#             print(f"  - Correlation Matrix:\n{corr_matrix}")
-#
-#     file.close()
-#
-# # Example usage:
-# filename = r"C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\wtf.exr"
-# # Optionally, load a reference image for PSNR and SSIM calculations
-# # reference_filename = r"path_to_reference_image.exr"
-# # reference = analyze_exr_file(reference_filename)
-# analyze_exr_file(filename)
+import OpenEXR
+import numpy as np
+import matplotlib.pyplot as plt
+from skimage.metrics import structural_similarity as ssim
+
+def calculate_entropy(data):
+    hist, _ = np.histogram(data, bins=256, range=(0, 1))
+    hist = hist[hist > 0]  # Ignore zero entries
+    probabilities = hist / hist.sum()
+    return -np.sum(probabilities * np.log2(probabilities))
+
+def analyze_exr_file(filename, reference=None):
+    file = OpenEXR.InputFile(filename)
+    header = file.header()
+    dw = header['dataWindow']
+    width = dw.max.x + 1
+    height = dw.max.y + 1
+
+    channels = []
+    for channel_name in header['channels']:
+        channel_data = np.frombuffer(file.channel(channel_name), dtype=np.float32).reshape((height, width))
+        channels.append(channel_data)
+
+    for i, channel in enumerate(channels):
+        print(f"Channel {i + 1} Analysis:")
+        mean = np.mean(channel)
+        std_dev = np.std(channel)
+        min_val = np.min(channel)
+        max_val = np.max(channel)
+        variance = std_dev ** 2
+        entropy = calculate_entropy(channel.flatten())
+
+        print(f"  - Mean: {mean}")
+        print(f"  - Standard Deviation: {std_dev}")
+        print(f"  - Variance: {variance}")
+        print(f"  - Min: {min_val}")
+        print(f"  - Max: {max_val}")
+        print(f"  - Entropy: {entropy}")
+
+        plt.hist(channel.flatten(), bins=256, range=(0, 1))
+        plt.title(f"Histogram of Channel {i + 1}")
+        plt.xlabel("Pixel Value")
+        plt.ylabel("Frequency")
+        plt.show()
+
+        # If a reference image is provided, calculate PSNR and SSIM
+        if reference is not None:
+            # Assuming reference has the same dimensions and number of channels
+            psnr = 20 * np.log10(np.max(reference) / np.sqrt(np.mean((reference - channel) ** 2)))
+            ssim_index = ssim(reference, channel, data_range=channel.max() - channel.min())
+            print(f"  - PSNR: {psnr:.2f} dB")
+            print(f"  - SSIM: {ssim_index:.4f}")
+
+        # Correlation Coefficient
+        if len(channels) > 1:
+            corr_matrix = np.corrcoef([channel.flatten() for channel in channels])
+            print(f"  - Correlation Matrix:\n{corr_matrix}")
+
+    file.close()
+
+# Example usage:
+filename = r"/Encryption/Prototype\encrypted1.exr"
+# Optionally, load a reference image for PSNR and SSIM calculations
+# reference_filename = r"path_to_reference_image.exr"
+# reference = analyze_exr_file(reference_filename)
+analyze_exr_file(filename)
 #
 #
 # # import numpy as np
@@ -238,7 +238,7 @@
 #     return pattern_image, contours
 #
 # # Example usage
-# image_path = r'C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\encrypted2.exr'  # Replace with your .exr file path
+# image_path = r'C:\Users\viraj\PycharmProjects\Research\Encryption\Prototype\encrypted2.exr'  # Replace with your .exr file path
 # assess_encryption(image_path)
 
 
@@ -316,8 +316,8 @@ def rate_encryption(original_image_path, encrypted_image_path):
     return psnr_value, rating
 
 
-original_image_path = r'C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\Compilation\Imagess\wtff.png'  # Update with your image path
-encrypted_image_path = r'C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\wtf.exr'  # Update with your image path
+original_image_path = r'/Encryption/Prototype\Compilation\Imagess\wtff.png'  # Update with your image path
+encrypted_image_path = r'/Encryption/Prototype\wtf.exr'  # Update with your image path
 psnr_value, encryption_rating = rate_encryption(original_image_path, encrypted_image_path)
 
 print(f"PSNR Value: {psnr_value:.2f} dB")

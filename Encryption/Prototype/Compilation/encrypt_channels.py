@@ -2,7 +2,7 @@ import torch
 from torchvision import transforms
 from PIL import Image
 import numpy as np
-from Encryption.Model1.Compilation.Generate_Sequences import generate_keys, generate_chaotic_sequences
+from Encryption.Prototype.Compilation.Generate_Sequences import generate_keys, generate_chaotic_sequences
 
 
 def encrypt_channels(encoder1, encoder2, encoder3, chaos1, chaos2, chaos3, img_pth):

@@ -92,7 +92,7 @@ def load_img(filename):
 #                                                         loaded_image)
 #     # Convert decrypted tensor to PIL image and display
 #     decrypted_image_pil = transforms.ToPILImage()(decrypted_image.cpu())
-#     decrypted_image_pil.save(r"C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\Compilation\decrypted.png")
+#     decrypted_image_pil.save(r"C:\Users\viraj\PycharmProjects\Research\Encryption\Prototype\Compilation\decrypted.png")
 #     decrypted_image_pil.show()
 
 channel_confusion_key1_input = float(input("Enter key."))
@@ -139,7 +139,7 @@ def encrypt(img, save_img_name, width=256, height=256):
                                   key_1,
                                   key_2,
                                   key_3)
-    save_img(fr"C:\Users\viraj\PycharmProjects\Research\Encryption\Model1\Compilation\Imagess\{save_img_name}.exr", final_img)
+    save_img(fr"/Encryption/Prototype\Compilation\Imagess\{save_img_name}.exr", final_img)
 
 
 def decrypt(img, save_img_name, width=256, height=256):
