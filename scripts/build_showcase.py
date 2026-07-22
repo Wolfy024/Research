@@ -135,7 +135,15 @@ def render_key_chart(metrics: dict[str, object], output: Path) -> None:
         height=0.52,
         zorder=2,
     )
-    axis.axvline(50, color=INK, linestyle="--", linewidth=1.2, label="Chance (50%)")
+    axis.axvline(50, color=INK, linestyle="--", linewidth=1.2)
+    axis.text(
+        51,
+        0.50,
+        "Chance · 50%",
+        color=INK,
+        fontsize=10,
+        va="center",
+    )
     axis.set_xlim(0, 100)
     axis.set_xlabel("Recovered payload bits (%)", color=INK)
     axis.set_title(
@@ -163,7 +171,6 @@ def render_key_chart(metrics: dict[str, object], output: Path) -> None:
             color=INK,
             fontweight="bold",
         )
-    axis.legend(frameon=False, loc="lower right")
     figure.tight_layout()
     figure.savefig(output, dpi=180, bbox_inches="tight")
     plt.close(figure)
@@ -218,6 +225,7 @@ def render_qualitative(
     dataset: ImageFolderDataset,
     output: Path,
     device: torch.device,
+    dpi: int = 100,
 ) -> None:
     model.eval()
     indices = [0, len(dataset) // 2, len(dataset) - 1]
@@ -275,7 +283,7 @@ def render_qualitative(
         fontsize=10,
     )
     figure.tight_layout(rect=(0.05, 0.03, 1, 0.96))
-    figure.savefig(output, dpi=180, bbox_inches="tight")
+    figure.savefig(output, dpi=dpi, bbox_inches="tight")
     plt.close(figure)
 
 

@@ -1,155 +1,247 @@
-# Research — Deep Learning Image Watermarking & Encryption
+<div align="center">
 
-A PyTorch research project exploring two complementary problems in image security:
+# SpectralMark
 
-1. **Invisible Image Watermarking** — hiding a secret image inside a cover image with imperceptible visual change.
-2. **Image Encryption** — scrambling image content using chaotic sequences and neural network–based key streams so the image is unrecoverable without the correct keys.
+### Blind, keyed 32-bit provenance watermarks with learned block-DCT host cancellation
 
----
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch 2.3+](https://img.shields.io/badge/PyTorch-2.3%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Payload](https://img.shields.io/badge/payload-32%20bits-2563EB)](#verified-results)
+[![Channel](https://img.shields.io/badge/channel-lossless%20PNG-D4A72C)](#scope-and-limitations)
+[![License MIT](https://img.shields.io/badge/license-MIT-172033)](LICENSE)
 
-## Table of Contents
+A compact PyTorch system that writes a keyed owner/provenance ID into an image,
+then recovers it blindly from the watermarked image alone.
 
-- [Results](#results)
-- [Repository Structure](#repository-structure)
-- [Watermark Module](#watermark-module)
-- [Encryption Module](#encryption-module)
-- [Helper & Pre-processing Utilities](#helper--pre-processing-utilities)
-- [Requirements](#requirements)
-- [Training](#training)
+</div>
 
----
+![Actual cover, watermarked, and amplified-residual outputs from the final checkpoint](assets/qualitative_examples.png)
 
-## Results
+<p align="center"><sub>Actual outputs from three fixed, unselected DIV2K validation images. The residual is amplified 12× and centered at gray; each row reports its own PSNR and recovered-bit accuracy.</sub></p>
 
-### Watermarking
+## Verified results
 
-| Mode      | SSIM    | PSNR   |
-|-----------|---------|--------|
-| RGB       | 99.8 %  | 41 dB  |
-| Grayscale | 99.99 % | 45 dB  |
+The committed showcase checkpoint was trained for 500 steps on a deterministic
+2,000-image subset of COCO val2017, then evaluated on all 100 disjoint DIV2K
+validation images. Evaluation is FP32 after differentiable 8-bit quantization;
+the supported transport is clean, lossless PNG.
 
-> Both metrics are measured between the original cover image and the watermarked output. Higher is better.
+| Measurement | Result |
+|---|---:|
+| Clean bit accuracy | **99.81%** |
+| Exact 32-bit messages | **97 / 100** |
+| Cover → watermarked PSNR | **40.016 dB** |
+| Cover → watermarked SSIM | **0.998907** |
+| Wrong-key bit accuracy | **50.97%** |
+| Learned parameters | **19,091** |
+| Evaluation cohort | **100 images** |
 
----
+Every value above is backed by [results/showcase.json](results/showcase.json).
+The fixed filenames and SHA-256 hashes are in
+[results/showcase_manifest.json](results/showcase_manifest.json), and the
+83 KB checkpoint is [checkpoints/showcase.pt](checkpoints/showcase.pt).
 
-## Repository Structure
+<table>
+<tr>
+<td width="50%"><img src="assets/key_separation.png" alt="Correct-key and wrong-key bit recovery comparison"></td>
+<td width="50%"><img src="assets/fidelity_distribution.png" alt="Distribution of cover-to-watermarked PSNR over the evaluation cohort"></td>
+</tr>
+</table>
 
-```
-Research/
-├── Watermark/
-│   ├── Model_1/
-│   │   ├── Encoder/          # UNET encoder — embeds secret into cover image
-│   │   └── BlendModels/      # MAM encoder/decoder — blends bottleneck features
-│   └── Model_2/
-│       ├── Encoder/          # Improved UNET encoder (includes pre-trained checkpoint)
-│       └── GAN.py            # GAN discriminator used during adversarial fine-tuning
-│
-├── Encryption/
-│   ├── Prototype/
-│   │   ├── ChaoticSequence/  # Neural model trained to produce chaotic key streams
-│   │   ├── Encoder/          # Sequence encoder prototype
-│   │   ├── XorSequence/      # XOR key-stream configuration
-│   │   └── Compilation/      # End-to-end encrypt / decrypt pipeline (EXR output)
-│   ├── Model1/
-│   │   └── XOR/              # Linear model trained with an XOR-based encryption loss
-│   └── Model2/
-│       ├── UNET/             # UNET-based encryption model
-│       ├── Encoder/          # Seed-driven key generation utilities
-│       └── Compile/          # Bottleneck-level encode / decode pipeline
-│
-├── HelperFunctions/
-│   ├── Calc_Vram.py          # Estimate GPU VRAM required for a given batch/model size
-│   └── CheckPath.py          # Validate dataset and output directory paths
-│
-└── PreProcessingFunctions/
-    ├── 3Channelto2Channel.py # Convert RGB images to 2-channel format
-    └── RemoveExtraFiles.py   # Strip non-image files (e.g. .mat) from a dataset folder
-```
+The correct key recovers nearly every payload bit; a wrong key stays near the
+50% random-guess baseline. Fidelity is concentrated around the configured
+40 dB budget rather than selected from a best-case sample.
 
----
+## What is different here?
 
-## Watermark Module
+This is not another generic convolutional encoder/decoder and it is deliberately
+different from [Wolfy024/Stego_1](https://github.com/Wolfy024/Stego_1).
 
-The watermarking pipeline hides a **secret image** inside a **cover image** such that the output is visually identical to the cover.
+| SpectralMark (this repository) | Stego_1 |
+|---|---|
+| 32-bit provenance ID | Complete 256×256 RGB secret image |
+| User-keyed block/frequency/polarity assignment | Keyless reveal with a fixed latent |
+| Orthonormal 8×8 block DCT | Haar DWT/IWT |
+| Learned texture gain + host-interference predictor | Invertible affine coupling network |
+| Non-invertible blind correlation decoder | Reverse pass reconstructs the secret image |
+| 19K learned parameters | 4.17M inference parameters |
+| Clean lossless-PNG scope | Full-image clean-channel steganography |
 
-### Input Format
+## Architecture
 
-| Input        | Colour Space        | Resolution |
-|--------------|---------------------|------------|
-| Cover image  | RGB                 | 512 × 512  |
-| Secret image | RGB **or** Grayscale | 512 × 512  |
+Each 8×8 block carries one keyed BPSK observation. The key determines which
+payload bit, mid-frequency DCT coordinate, and polarity belong to every block.
+A small CNN predicts a positive per-block gain from image texture. At decode
+time, an MLP estimates the natural host coefficient from the other 63 DCT
+coefficients; subtracting that estimate suppresses cover interference before
+the repeated observations are de-spread and averaged.
 
-### Model_1
+~~~mermaid
+flowchart LR
+    A[RGB cover] --> B[8×8 luminance DCT]
+    A --> C[Texture-gain CNN]
+    K[User key] --> D[Block / bit / frequency / polarity map]
+    M[32-bit ID] --> E[BPSK coefficient writer]
+    B --> E
+    C --> E
+    D --> E
+    E --> F[Inverse DCT + 8-bit quantization]
+    F --> G[Watermarked PNG]
 
-- **Encoder** (`Watermark/Model_1/Encoder/`) — a UNET that takes the cover and secret images and produces a watermarked output.
-- **BlendModels** (`Watermark/Model_1/BlendModels/`) — a pair of MAM (Multi-Attention Module) encoder and decoder that operate on fused bottleneck features for higher-fidelity blending.
+    G --> H[8×8 luminance DCT]
+    H --> I[Selected carrier coefficient]
+    H --> J[Other 63 coefficients]
+    J --> L[Learned host predictor]
+    I --> N[Host subtraction]
+    L --> N
+    D --> O[Polarity de-spread + repeat average]
+    N --> O
+    O --> P[32 bit logits]
+~~~
 
-### Model_2
+The joint objective combines bit BCE, a hinge above the configured PSNR
+budget, host-coefficient prediction, low-frequency residual leakage, and
+gain-map smoothness. There is no GAN, wavelet transform, secret-image payload,
+or simulated corruption layer.
 
-- **Encoder** (`Watermark/Model_2/Encoder/`) — a refined UNET encoder. A pre-trained checkpoint is included under `Encoder/Models/`.
-- **GAN** (`Watermark/Model_2/GAN.py`) — a lightweight convolutional discriminator used to push watermarked images closer to the natural image manifold during adversarial training.
+## Quick start
 
----
+~~~bash
+git clone https://github.com/Wolfy024/Research.git
+cd Research
 
-## Encryption Module
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev,viz]"
 
-The encryption pipeline transforms an image into an unrecognisable form that can only be decoded with the exact set of keys used during encryption. Encrypted images are stored as lossless **OpenEXR** (`.exr`) files to preserve floating-point precision.
+ruff check .
+pytest
+python -m neural_watermark smoke
+~~~
 
-### Prototype
+The smoke command trains on procedural textures only to validate installation
+and gradient flow. Its output is explicitly not eligible for headline results.
 
-A proof-of-concept pipeline that chains:
+## Embed and extract
 
-1. **Channel diffusion** — each colour channel is independently XOR-diffused with a logistic-map key stream.
-2. **Pixel confusion** — pixel positions are permuted using a seed-driven shuffle key.
-3. **Reversible decryption** — the same keys applied in reverse order recover the original image exactly.
+The bundled checkpoint accepts 256×256 inputs and a 32-bit hexadecimal message.
+Embedding always writes PNG because the project supports a lossless channel.
 
-### Model1 — XOR Linear Model
+~~~bash
+spectral-watermark embed \
+  --checkpoint checkpoints/showcase.pt \
+  --input cover.jpg \
+  --output watermarked.png \
+  --message deadbeef \
+  --key wolfy024-provenance-v1
 
-A feed-forward linear model trained with a custom `EncryptionLoss` to learn an XOR-style transformation from random seeds.
+spectral-watermark extract \
+  --checkpoint checkpoints/showcase.pt \
+  --input watermarked.png \
+  --key wolfy024-provenance-v1
+~~~
 
-### Model2 — UNET Encryption
+The decoder sees only the watermarked image and matching key. The original
+cover is not used during extraction.
 
-A UNET whose bottleneck features are scrambled using tensor-swap operations driven by generated key sequences. The `Compile/` submodule exposes `encode_image` and `Reverse` scripts for the full round-trip.
+## Train and evaluate
 
----
+Edit [configs/default.json](configs/default.json), then point the CLI at a
+folder containing images:
 
-## Helper & Pre-processing Utilities
+~~~bash
+spectral-watermark train \
+  --config configs/default.json \
+  --data-dir data/train \
+  --checkpoint runs/my-model/latest.pt \
+  --device auto
 
-| File | Purpose |
-|------|---------|
-| `HelperFunctions/Calc_Vram.py` | Estimate peak GPU memory for a model and batch size before training |
-| `HelperFunctions/CheckPath.py` | Assert that required directories exist and are non-empty |
-| `PreProcessingFunctions/3Channelto2Channel.py` | Convert RGB images to a 2-channel representation |
-| `PreProcessingFunctions/RemoveExtraFiles.py` | Delete non-image files from a dataset directory |
+spectral-watermark evaluate \
+  --checkpoint runs/my-model/latest.pt \
+  --data-dir data/eval \
+  --output results/my-evaluation.json \
+  --device auto
+~~~
 
----
+To reproduce the committed cross-dataset run and all README figures:
 
-## Requirements
+~~~bash
+python -m scripts.build_showcase \
+  --train-dir data/coco/val2017 \
+  --eval-dir data/div2k/DIV2K_valid_HR \
+  --steps 500 \
+  --train-images 2000 \
+  --batch-size 8 \
+  --device cuda
+~~~
 
-- Python ≥ 3.9
-- [PyTorch](https://pytorch.org/) with CUDA (recommended)
-- torchvision
-- OpenEXR + Imath (encryption module only)
-- numpy, matplotlib
+See [DATA.md](DATA.md) for cohort rules and [MODEL_CARD.md](MODEL_CARD.md) for
+intended use, metrics, and limitations.
 
----
+## Python API
 
-## Training
+~~~python
+import torch
 
-Each model contains a `Train.py` script and a `config.py` file.  
-Default hyperparameters (shared across most models):
+from neural_watermark import ModelConfig, NeuralWatermarker
+from neural_watermark.training import load_checkpoint
 
-| Hyperparameter | Value |
-|----------------|-------|
-| Optimizer      | Adam  |
-| Learning rate  | 2e-4  |
-| Batch size     | 16    |
-| Epochs         | 20    |
-| Train split    | 80 %  |
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model, _ = load_checkpoint("checkpoints/showcase.pt", device)
 
-To train a model, update the dataset path in the relevant `Train.py`, then run:
+cover = torch.rand(1, 3, 256, 256, device=device)
+bits = torch.randint(0, 2, (1, 32), device=device).float()
 
-```bash
-cd Watermark/Model_1/Encoder   # or any other model directory
-python Train.py
-```
+with torch.inference_mode():
+    watermarked = model.embed(cover, bits)["watermarked"]
+    recovered_bits = model.decode(watermarked)
+~~~
+
+## Repository layout
+
+~~~text
+neural_watermark/
+  carriers.py       block DCT, keyed assignments, de-spreading
+  models.py         texture gains, host predictor, blind model API
+  losses.py         PSNR-budget and recovery objective
+  metrics.py        PSNR, SSIM, BER, exact-message metrics
+  data.py           deterministic loading and PNG I/O
+  training.py       training, evaluation, checkpoints, evidence
+  cli.py            smoke, train, evaluate, embed, extract
+scripts/
+  build_showcase.py fixed training/evaluation and figure pipeline
+configs/             checked-in experiment configuration
+checkpoints/         small reproducible showcase checkpoint
+results/             manifest and machine-readable evidence
+assets/              charts and actual model outputs
+tests/               CPU-friendly regression suite
+legacy/              archived pre-project experiments
+~~~
+
+## Scope and limitations
+
+- Clean, lossless PNG is the only evaluated channel.
+- JPEG recompression, blur, resizing, cropping, and adversarial attacks are not
+  supported or claimed.
+- The user key controls carrier placement; it is not a cryptographic signature,
+  encryption scheme, DRM system, or proof of authorship.
+- Inputs are center-fit to 256×256. Shipping at arbitrary resolution needs a
+  tiling or multiscale policy that is not implemented here.
+- Results cover one checkpoint and one fixed 100-image DIV2K cohort.
+- COCO and DIV2K images are not redistributed; obtain them under their original
+  dataset terms.
+
+For threat-model details, read [SECURITY.md](SECURITY.md).
+
+## Legacy research
+
+The original autoencoder, unfinished image-hiding, GAN, and encryption
+experiments are preserved under [legacy/](legacy/). They are excluded from the
+installable package and CI. Previously stated 41/45 dB and SSIM figures had no
+reproducible evaluation artifacts and are not used by this project.
+
+## License
+
+Code is released under the [MIT License](LICENSE). Dataset images remain under
+their source licenses.

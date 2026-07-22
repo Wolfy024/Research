@@ -21,6 +21,9 @@ dev = [
   "pytest>=8",
   "ruff>=0.6",
 ]
+viz = [
+  "matplotlib>=3.8",
+]
 
 [project.scripts]
 spectral-watermark = "neural_watermark.cli:main"

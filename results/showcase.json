@@ -1,0 +1,993 @@
+{
+  "chart_contracts": {
+    "fidelity_distribution": {
+      "chart": "histogram with median reference",
+      "question": "How does visual fidelity vary across the holdout?",
+      "source": "metrics.per_image[].psnr"
+    },
+    "key_separation": {
+      "chart": "two-category horizontal bar with chance reference",
+      "question": "Does the matching key recover more bits than a wrong key?",
+      "source": "metrics.final"
+    }
+  },
+  "checkpoint": {
+    "path": "checkpoints/showcase.pt",
+    "sha256": "a02c4451d47976945f5c7ccb8fee5069bfb6f9119cc256bfb0a67434065bcabf"
+  },
+  "created_at": "2026-07-22T05:45:43.391482+00:00",
+  "dataset": {
+    "evaluation": "DIV2K validation, all 100 images",
+    "manifest": "results/showcase_manifest.json",
+    "manifest_sha256": "4c16481e70f1a9f0306dcbe3a1c8cc213c3f656b77c37fd5f70f99bf0018f83d",
+    "training": "COCO val2017 deterministic 2,000-image subset"
+  },
+  "environment": {
+    "device": "cuda:0",
+    "python": "3.12.3",
+    "pytorch": "2.12.0a0+5aff3928d8.nv26.05"
+  },
+  "git_revision": "c1b5dad053fe56f2a13f4146e03cb662b15e7b65",
+  "kind": "cross_dataset_clean_channel_showcase",
+  "metrics": {
+    "final": {
+      "batches": 13,
+      "bit_accuracy": 0.998125,
+      "bit_error_rate": 0.001875,
+      "bits_per_pixel": 0.00048828125,
+      "exact_message_accuracy": 0.97,
+      "images": 100,
+      "payload_bits": 32,
+      "psnr": 40.01557861328125,
+      "residual_rms": 0.009985489584505559,
+      "ssim": 0.9989068508148193,
+      "wrong_key_bit_accuracy": 0.5096875,
+      "wrong_key_exact_message_accuracy": 0.0
+    },
+    "per_image": [
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0801.png",
+        "psnr": 39.930206298828125,
+        "sha256": "ab5cf6a1cac2d1c2d0792dbd274fd2e53e42118ab6537771a825fd87aa28a60c",
+        "ssim": 0.9990822672843933,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0802.png",
+        "psnr": 39.95563507080078,
+        "sha256": "4ad6f3ca8bf740192042978121f05ec493ddbe5a3da5584eaf0d9699c25ee431",
+        "ssim": 0.9993100166320801,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0803.png",
+        "psnr": 39.92180633544922,
+        "sha256": "4b0148a9a1ff877ad9f76e65736a50cc36e10822b5d8ccd2abb2988ff4e1782b",
+        "ssim": 0.9991433024406433,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0804.png",
+        "psnr": 39.93356704711914,
+        "sha256": "16b5fdbe808b868bed0be32f235208a1716d44e271a37b79cbc77ab53d2f6bdb",
+        "ssim": 0.9992291927337646,
+        "wrong_key_bit_accuracy": 0.4375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0805.png",
+        "psnr": 39.9906120300293,
+        "sha256": "e28d56feee10c2e2663f347dda574fff736894dba37341d37b91bac2ecd863b2",
+        "ssim": 0.9991568326950073,
+        "wrong_key_bit_accuracy": 0.375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0806.png",
+        "psnr": 39.979244232177734,
+        "sha256": "36720ddd59f8b3eed28f8981e12e6e2d680bfa78b9d25f33ec4152013652c713",
+        "ssim": 0.9992283582687378,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0807.png",
+        "psnr": 40.00293731689453,
+        "sha256": "4a2493d918862f703f783dc675bacbae5bd7698aa58f81ddb8bb71cf39ac173a",
+        "ssim": 0.9990478157997131,
+        "wrong_key_bit_accuracy": 0.375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0808.png",
+        "psnr": 40.23841857910156,
+        "sha256": "956528ab3e0fadad1ed8ce93f93a30bf9f58c36ffa9dd775e2ad362ffdcf5ace",
+        "ssim": 0.9994214177131653,
+        "wrong_key_bit_accuracy": 0.6875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0809.png",
+        "psnr": 39.921993255615234,
+        "sha256": "a0b094da02bcaeabea1976fb939c87366d437bdda1a796fbc3f4700fb5e7bbed",
+        "ssim": 0.9989323616027832,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0810.png",
+        "psnr": 39.9053955078125,
+        "sha256": "6940c660b97d2c5f1113101c3e6360d1d6886743c5796cad52224b8076b903f8",
+        "ssim": 0.9981836676597595,
+        "wrong_key_bit_accuracy": 0.625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0811.png",
+        "psnr": 40.03822326660156,
+        "sha256": "7016bcf4112049162da604772c810bed4f5983af52e07d23755ac2c3475fe8ad",
+        "ssim": 0.9990898370742798,
+        "wrong_key_bit_accuracy": 0.4375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0812.png",
+        "psnr": 39.98686218261719,
+        "sha256": "49e45b8922872b44ece90db047756f3a5356612bb6ee30bdc23df2bd208ec861",
+        "ssim": 0.9991989135742188,
+        "wrong_key_bit_accuracy": 0.375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0813.png",
+        "psnr": 40.00276184082031,
+        "sha256": "71c06a2c36979345c99c887e7bd6aebfd0bd1648d93b7bd15f56c65e1291b37e",
+        "ssim": 0.9994851350784302,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0814.png",
+        "psnr": 40.05656433105469,
+        "sha256": "2fec903d11d2a79070268a4316c100f8314eaadd8f8a65cce152f14826f04876",
+        "ssim": 0.9979379773139954,
+        "wrong_key_bit_accuracy": 0.71875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0815.png",
+        "psnr": 39.949127197265625,
+        "sha256": "c8f278e51f2bc9be7a696935b7e386eb4adafde24572d8ecdd4edf8adf4b4108",
+        "ssim": 0.9989227056503296,
+        "wrong_key_bit_accuracy": 0.625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0816.png",
+        "psnr": 39.94868087768555,
+        "sha256": "87b7b2a666c92efdb24eadf67bc0c68bce5560ee89bd0532f50f94d8cf88b434",
+        "ssim": 0.9990228414535522,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0817.png",
+        "psnr": 39.94892120361328,
+        "sha256": "fdb28a6df3408758cc6d87563a157081c22d1325ea6d8034405ce45abcfc3879",
+        "ssim": 0.9992477893829346,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0818.png",
+        "psnr": 39.9885139465332,
+        "sha256": "8679d88891d7e8491fd61abded2c6864d90f5c1817b300f5d5796d05bb11488f",
+        "ssim": 0.9993356466293335,
+        "wrong_key_bit_accuracy": 0.59375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0819.png",
+        "psnr": 39.96245193481445,
+        "sha256": "fcbc6cb7e7cdb717e94d8c8eaf659d6b2bfa513aa133c0d2c4a8e2aa96092529",
+        "ssim": 0.9988589286804199,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0820.png",
+        "psnr": 40.03651428222656,
+        "sha256": "2617cfc25dd5442cc017bd17aa24ecae4751b1e5ed6013e8adddb727617bcd5b",
+        "ssim": 0.9994580745697021,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 0.96875,
+        "exact_message": false,
+        "file": "0821.png",
+        "psnr": 40.13916015625,
+        "sha256": "0eb14dfcb1d21cb5d3437dc5135c458154cd7fabed8147fbdc415d3ef671c14b",
+        "ssim": 0.9994141459465027,
+        "wrong_key_bit_accuracy": 0.40625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0822.png",
+        "psnr": 39.97211837768555,
+        "sha256": "a1d308fd62adecb1ea8b0fa8d0c687c92d3cf0d3358e598c8b97aca1b9cf8ad0",
+        "ssim": 0.9989393353462219,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0823.png",
+        "psnr": 40.00321960449219,
+        "sha256": "8db26bddf2ac9975e5227be3eb1180f6377145eee5dca1e421100014cbd7ef6e",
+        "ssim": 0.9993247389793396,
+        "wrong_key_bit_accuracy": 0.4375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0824.png",
+        "psnr": 39.970458984375,
+        "sha256": "484316545f6b08655d30faa1bc5f29eb6821d049b62bb528319b504790c188e2",
+        "ssim": 0.9993482828140259,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0825.png",
+        "psnr": 39.92762756347656,
+        "sha256": "0db87d6f7d6cf3a12fc384d8232c337fe0f509f2518845166c1033e22169115d",
+        "ssim": 0.9991310834884644,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0826.png",
+        "psnr": 40.048805236816406,
+        "sha256": "b0f675a14e8fe9f2ec0b705bee98d75f8a22478eafdc1a0a0afc0f820bc5ab4d",
+        "ssim": 0.9993882179260254,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0827.png",
+        "psnr": 40.17192459106445,
+        "sha256": "e8cfa94ed77a021b63da63406940de3a830fe1217e752b5929d50602a1aaa407",
+        "ssim": 0.9953657388687134,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0828.png",
+        "psnr": 40.59210205078125,
+        "sha256": "a62013e252fa503920f54b9b1eff9babd501c742d2c82c97d7c22394493ffa12",
+        "ssim": 0.9985926151275635,
+        "wrong_key_bit_accuracy": 0.3125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0829.png",
+        "psnr": 39.91530990600586,
+        "sha256": "de81c82e13d499226fd96505b6a72f59b6b8506c03ff0b6d06b6393d066f68a4",
+        "ssim": 0.9987910985946655,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0830.png",
+        "psnr": 39.890872955322266,
+        "sha256": "4eb18566ab01447a06daf0314a3711aa78cea5ca0eaa47cfedafbceeb6dd0a3e",
+        "ssim": 0.9986481070518494,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0831.png",
+        "psnr": 40.00287628173828,
+        "sha256": "343c5d2665d9c5efd7a5444e72d383f63d96bac35902ed088c9a3ee88e0d4ed2",
+        "ssim": 0.9989791512489319,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0832.png",
+        "psnr": 40.05720520019531,
+        "sha256": "5c609d644b5924900e82dbecadfb85497b77d6cfad52a0c4c7e43a83f9868c33",
+        "ssim": 0.9993261098861694,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0833.png",
+        "psnr": 39.89411926269531,
+        "sha256": "2e9668b3a318284ec90c9bbdd940317ecd2f7b95314e68c48c94d2380fad679a",
+        "ssim": 0.9989854097366333,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0834.png",
+        "psnr": 40.18514633178711,
+        "sha256": "4d2621a246e4a771754aa0052b91d79dbebfe866d9dbd8200e3c68e038a3de88",
+        "ssim": 0.9995425343513489,
+        "wrong_key_bit_accuracy": 0.4375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0835.png",
+        "psnr": 40.00154495239258,
+        "sha256": "263cfd9c7d2eee15b29250e6d0dc366ed680feb222de3f8c2fb5c6bd304608e4",
+        "ssim": 0.9989197254180908,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0836.png",
+        "psnr": 39.89947509765625,
+        "sha256": "d056c4afc22367640c8ec7a1b84c06eaa7405e29363f0e75ea824e15aec149d0",
+        "ssim": 0.9993035793304443,
+        "wrong_key_bit_accuracy": 0.59375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0837.png",
+        "psnr": 39.988346099853516,
+        "sha256": "4618bd32e1d1a2ef0f4ad3f6b941e3745a97371fd300dad3c5c4c9013caec8db",
+        "ssim": 0.9991219639778137,
+        "wrong_key_bit_accuracy": 0.40625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0838.png",
+        "psnr": 40.020904541015625,
+        "sha256": "01e42bb5efb35d97a9931fc421f793e3c12d0922a3df288bbfd148b6a82a145b",
+        "ssim": 0.99928218126297,
+        "wrong_key_bit_accuracy": 0.59375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0839.png",
+        "psnr": 40.778038024902344,
+        "sha256": "818abf16ba0aacc3fb6737c5ddd7c2188ca7321b6b28b7f4ba1898627387dee7",
+        "ssim": 0.9993966817855835,
+        "wrong_key_bit_accuracy": 0.375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0840.png",
+        "psnr": 40.02106475830078,
+        "sha256": "e023c2b2628b7d897d69150baa40be6ceda9fe0e45a0d51348011c6a47b44d86",
+        "ssim": 0.9984201788902283,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0841.png",
+        "psnr": 40.003387451171875,
+        "sha256": "0f46093cd84e7ee037d1ded8680f2f39583af5dadac0da580a3911ed482de285",
+        "ssim": 0.9985984563827515,
+        "wrong_key_bit_accuracy": 0.625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0842.png",
+        "psnr": 39.897560119628906,
+        "sha256": "c6ec845abfd696fcf5f39beadb8632ecc56ac8416318a9dbb27c4c4d294aa592",
+        "ssim": 0.999385416507721,
+        "wrong_key_bit_accuracy": 0.65625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0843.png",
+        "psnr": 40.13236618041992,
+        "sha256": "3ef88e17c711156a52ef8c7385f01b364ade64bb0d90938debfc4b454e0d1e06",
+        "ssim": 0.9987897872924805,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0844.png",
+        "psnr": 39.87787628173828,
+        "sha256": "93da0f98885573c518891c5eb6004818436ae36cf1ed894cfef853e131d9d86d",
+        "ssim": 0.9990831613540649,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0845.png",
+        "psnr": 39.93624496459961,
+        "sha256": "35416e153d4ffd1f83df1502dca371db2059e818b72c1e3a95fb9a9266b59172",
+        "ssim": 0.999484121799469,
+        "wrong_key_bit_accuracy": 0.40625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0846.png",
+        "psnr": 40.558677673339844,
+        "sha256": "eaef63b3b0889ea99559e1e959240393505d9f6d4d5cb7f6a90729b024b4ffb4",
+        "ssim": 0.9996747374534607,
+        "wrong_key_bit_accuracy": 0.4375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0847.png",
+        "psnr": 40.134788513183594,
+        "sha256": "ce39eab49b45fc08177556f7c9ae0d0e928e283fb3cd471bddf0fbf17db8ca73",
+        "ssim": 0.9994974136352539,
+        "wrong_key_bit_accuracy": 0.65625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0848.png",
+        "psnr": 40.02471923828125,
+        "sha256": "4a8f2f4eee348242b17eb7ee72aad9c1c1fe870a1d414db4704819fede40b660",
+        "ssim": 0.9994621276855469,
+        "wrong_key_bit_accuracy": 0.4375
+      },
+      {
+        "bit_accuracy": 0.96875,
+        "exact_message": false,
+        "file": "0849.png",
+        "psnr": 39.953121185302734,
+        "sha256": "1d576e20f4720050d0b7af5295b323c342a5284ed75a8ce3bae6e0cb46c89eb6",
+        "ssim": 0.9994314908981323,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0850.png",
+        "psnr": 39.923423767089844,
+        "sha256": "1d026bda033ce6fa0db97aa3ec120f3609663f4d0aaf2f9d8e677fdbe235ab03",
+        "ssim": 0.9990882873535156,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0851.png",
+        "psnr": 40.478092193603516,
+        "sha256": "1c4bc95887a3c06f9690fec153d5548ec52039c8ba83da749f2b5f6e0d2ecf33",
+        "ssim": 0.9992711544036865,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0852.png",
+        "psnr": 40.84709548950195,
+        "sha256": "47f4db4100055a954606d789dfe183612ea7e196a06b2e7bc4bd39c3522628ee",
+        "ssim": 0.995591938495636,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0853.png",
+        "psnr": 40.048988342285156,
+        "sha256": "854189ea5c2a325324500c6cf7168e0b78d30b09606eb5a59f938a5ae69139fe",
+        "ssim": 0.9992315769195557,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0854.png",
+        "psnr": 39.89995193481445,
+        "sha256": "f77817c7a5d940baf174efa61d2fbf40354a08ade7a151e155ce62bd2481eca8",
+        "ssim": 0.9989432096481323,
+        "wrong_key_bit_accuracy": 0.40625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0855.png",
+        "psnr": 39.950679779052734,
+        "sha256": "86001004f1eb6a1e182bb2ed3c23093d2656690a61091b2822af1c9124a40141",
+        "ssim": 0.9990652203559875,
+        "wrong_key_bit_accuracy": 0.40625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0856.png",
+        "psnr": 40.07673263549805,
+        "sha256": "cf845f85d9f65570938a15f56fe9de749619f9bee35533944f46bba94f0ff77b",
+        "ssim": 0.9967575669288635,
+        "wrong_key_bit_accuracy": 0.59375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0857.png",
+        "psnr": 39.941287994384766,
+        "sha256": "4fafd48e2926f530129290c9f843490dcbf7809c8505c123a5f18ec2a5005611",
+        "ssim": 0.9985589981079102,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0858.png",
+        "psnr": 40.2188835144043,
+        "sha256": "428049494acf4dadf08c5bd62c8711ac258af5fa0f008b5fb389a4fffca96c58",
+        "ssim": 0.9990684986114502,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0859.png",
+        "psnr": 39.88864517211914,
+        "sha256": "3ada872de7c5def1d408920385db278b1ff3a5a0cfcab83105a789ff540a1827",
+        "ssim": 0.9990406632423401,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0860.png",
+        "psnr": 39.95104217529297,
+        "sha256": "eac29d623ecfab9e2299c04b49e5da3f282a576eb7f9107d0b88076c972ac3ef",
+        "ssim": 0.9991353154182434,
+        "wrong_key_bit_accuracy": 0.625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0861.png",
+        "psnr": 40.07154083251953,
+        "sha256": "c6fe192a3f1b702948e99c483f04edfb362d2d218082a12457a5b0f09219ffc6",
+        "ssim": 0.9995632767677307,
+        "wrong_key_bit_accuracy": 0.375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0862.png",
+        "psnr": 39.874244689941406,
+        "sha256": "31a02d7392ee9dadd4b8a2c1b5b9d670943135d0d40e85d4178ab77923c75548",
+        "ssim": 0.9984813332557678,
+        "wrong_key_bit_accuracy": 0.65625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0863.png",
+        "psnr": 39.8990592956543,
+        "sha256": "5e98cca0fbeb2e649fa36a41a06240ce4ec4b05aa23859da13797f8ded0d5c1f",
+        "ssim": 0.9993566870689392,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0864.png",
+        "psnr": 39.980979919433594,
+        "sha256": "ca9811dd5910f947ee4dc75f709dcffe17bb7811ca562a0e4bcdefc781eadd76",
+        "ssim": 0.9976744055747986,
+        "wrong_key_bit_accuracy": 0.59375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0865.png",
+        "psnr": 39.918067932128906,
+        "sha256": "46ced1e049fce5a0381c3dc7d7276d058f78a7a7dab5cd88ef7a224cbf51fdb1",
+        "ssim": 0.9987090826034546,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0866.png",
+        "psnr": 39.89213562011719,
+        "sha256": "7fc232b9294ea4e6f32bdacc26f314efc067ee0359c5ff1a7000ec61c8da8511",
+        "ssim": 0.9989405274391174,
+        "wrong_key_bit_accuracy": 0.3125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0867.png",
+        "psnr": 39.9183464050293,
+        "sha256": "e3c2ee14a108f50479db683e3a6adc3682374eba236f64c74397fdb55a17b264",
+        "ssim": 0.9989383220672607,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0868.png",
+        "psnr": 39.88876724243164,
+        "sha256": "ba7de4237fa7cbdc2fff31f35015711909e501230e7c2f3f01f4e8dcf7a23c95",
+        "ssim": 0.9991070032119751,
+        "wrong_key_bit_accuracy": 0.4375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0869.png",
+        "psnr": 39.91960525512695,
+        "sha256": "68a693195536fc94bc34ce7ff0e041990916fed73164a7c2dce00098a178ac75",
+        "ssim": 0.9986822009086609,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0870.png",
+        "psnr": 39.90336608886719,
+        "sha256": "f03f496bb0f21d53012723782bfdbcbbde66115c45c35aa7d83373c304a9c041",
+        "ssim": 0.9985694289207458,
+        "wrong_key_bit_accuracy": 0.625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0871.png",
+        "psnr": 39.908756256103516,
+        "sha256": "777df9ed736ff3ccc73388e90de36e131c002dfac64767f3b8ebccdd2cd5f058",
+        "ssim": 0.9988405108451843,
+        "wrong_key_bit_accuracy": 0.375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0872.png",
+        "psnr": 39.900047302246094,
+        "sha256": "028ca10affee013698c7f15068fe4813a9d7b2c24f2bd40dac68305774a5577a",
+        "ssim": 0.9991269707679749,
+        "wrong_key_bit_accuracy": 0.625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0873.png",
+        "psnr": 39.99314880371094,
+        "sha256": "3fcb2ae160dd255180854eaf54051c40cd205421367d0352144bb7490bc9afb1",
+        "ssim": 0.9991058707237244,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0874.png",
+        "psnr": 39.99440002441406,
+        "sha256": "11cb511247d70d84adad5557a720254e5f73e3786dbcd399c6053a1982ce1784",
+        "ssim": 0.9989822506904602,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0875.png",
+        "psnr": 39.966495513916016,
+        "sha256": "3c4859b59635fe7fcd6ec182c798eb3af44a2eafb6e8b891df3db62d0da3c5e2",
+        "ssim": 0.998809814453125,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0876.png",
+        "psnr": 40.198787689208984,
+        "sha256": "9d5a819847876bb0061bf1fd42b8bd97e8aef89d1f5fb09b1669b7e9546a25f1",
+        "ssim": 0.9979440569877625,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0877.png",
+        "psnr": 40.12165451049805,
+        "sha256": "4e0fb583729accf7b93e07b2b81ce8d919f6490cee2d1f90db90b60095a59165",
+        "ssim": 0.9959239363670349,
+        "wrong_key_bit_accuracy": 0.65625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0878.png",
+        "psnr": 39.91196060180664,
+        "sha256": "e1aff248577bc04ddeba4f48a62aff421ca06450a703e4a450dd401e1efd9546",
+        "ssim": 0.9989452362060547,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0879.png",
+        "psnr": 40.05195617675781,
+        "sha256": "ad5eb9637c891994c00f44358cf0a5238f642b8796b5cacaa8b59ba8bb51553a",
+        "ssim": 0.9991685748100281,
+        "wrong_key_bit_accuracy": 0.4375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0880.png",
+        "psnr": 39.89238357543945,
+        "sha256": "db5773c6e460824c5132c23917492fda7acd370c87e9ae6293a0103fee2b642d",
+        "ssim": 0.9981423616409302,
+        "wrong_key_bit_accuracy": 0.375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0881.png",
+        "psnr": 39.88050842285156,
+        "sha256": "d2fba016ee3cee2395b677524d7ae2b2f6750cea1a6df4edc41f2977bd5d1b7c",
+        "ssim": 0.9982305765151978,
+        "wrong_key_bit_accuracy": 0.6875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0882.png",
+        "psnr": 40.00894546508789,
+        "sha256": "573345fb42061a43fe8f1c0b3b9faf57cdd77189782a4d89b78c31e421f19115",
+        "ssim": 0.999271810054779,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0883.png",
+        "psnr": 39.90930938720703,
+        "sha256": "3355621b3d834c320a66879e6cd23988df29f504f6cdecd22f1984b432a7e55a",
+        "ssim": 0.999081015586853,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0884.png",
+        "psnr": 39.956085205078125,
+        "sha256": "06a928200ad757ff2422ecd2e12986bb90e3bf6b64c6062e5d31f864cdc992bc",
+        "ssim": 0.9990101456642151,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0885.png",
+        "psnr": 39.90441131591797,
+        "sha256": "36f1c2b8af6d898354506ef3f78d386156cf1c1f1397c165a84e74cf6484d800",
+        "ssim": 0.9982684850692749,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0886.png",
+        "psnr": 39.987510681152344,
+        "sha256": "26af6bcdeea90b9900a021bf20a0550d9a1e107c59b4f05c96e8bccf0ab35db8",
+        "ssim": 0.9990541934967041,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0887.png",
+        "psnr": 39.91778564453125,
+        "sha256": "a0a893c9417fcd04067bf254512801f92ae7c795b686e05f7389853c9fb78b11",
+        "ssim": 0.9994290471076965,
+        "wrong_key_bit_accuracy": 0.59375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0888.png",
+        "psnr": 40.0203742980957,
+        "sha256": "82a8d193f4eb0819ad3e48c048d13860d0b8f34d6fafc9b626e304294db3ba12",
+        "ssim": 0.9994577169418335,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0889.png",
+        "psnr": 40.016700744628906,
+        "sha256": "a8f73c42065e3193c4deb883dcb3bc432a3f838e9be5bacea708ee39eb2c6e04",
+        "ssim": 0.9993531107902527,
+        "wrong_key_bit_accuracy": 0.5625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0890.png",
+        "psnr": 39.93118667602539,
+        "sha256": "67069da53af2b4f5237030631b0b5e087b8014d7b0f59917d96924aca1ab433c",
+        "ssim": 0.9982940554618835,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0891.png",
+        "psnr": 39.94679260253906,
+        "sha256": "8e36e76f3675831c87b2e645e70ef33513b898dc09beb20b0bdcc61cc6d63bed",
+        "ssim": 0.9991684556007385,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0892.png",
+        "psnr": 39.93695831298828,
+        "sha256": "7fb05e491f00963e64b53a0f3f7a3d1af51f1434e7fd4898d4b84c479e1f66f9",
+        "ssim": 0.9990283846855164,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0893.png",
+        "psnr": 40.03812789916992,
+        "sha256": "cdcef3c0f0dd65da7ca0c4e75b672dd1f87f778740cb42d675bcb13dc1b3c307",
+        "ssim": 0.999237596988678,
+        "wrong_key_bit_accuracy": 0.59375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0894.png",
+        "psnr": 39.910728454589844,
+        "sha256": "f412ff02984a0de7acc7e1209d02f8dcaa18ac76008fa260cf7c355e4a77976c",
+        "ssim": 0.9992298483848572,
+        "wrong_key_bit_accuracy": 0.65625
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0895.png",
+        "psnr": 40.0011100769043,
+        "sha256": "a1c0888648fed4eb909c6e7f5f5db220ae98861294ebfdfa14b2c72567e96b2b",
+        "ssim": 0.9988160729408264,
+        "wrong_key_bit_accuracy": 0.3125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0896.png",
+        "psnr": 39.920982360839844,
+        "sha256": "367c698aa344cea6e790239f04bae168ef204ae771f6ea05285e5255fad2f84f",
+        "ssim": 0.9994886517524719,
+        "wrong_key_bit_accuracy": 0.46875
+      },
+      {
+        "bit_accuracy": 0.875,
+        "exact_message": false,
+        "file": "0897.png",
+        "psnr": 39.99637222290039,
+        "sha256": "dca63f56dba4a2a2c6b920c4b0406c6c6459d8f7ffb0d20322f51fbbc8f14b38",
+        "ssim": 0.9992076754570007,
+        "wrong_key_bit_accuracy": 0.5
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0898.png",
+        "psnr": 40.03562927246094,
+        "sha256": "4cd6696b8e59615ceacff729181dd9b0cc5ea936ea9a57e089bb1fe4fe87c347",
+        "ssim": 0.9989611506462097,
+        "wrong_key_bit_accuracy": 0.53125
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0899.png",
+        "psnr": 39.933380126953125,
+        "sha256": "77e25eca6c3828abbea8f7fcf360d9be7f496513aa9ec08ff3f2e3a9c272e60e",
+        "ssim": 0.999020516872406,
+        "wrong_key_bit_accuracy": 0.59375
+      },
+      {
+        "bit_accuracy": 1.0,
+        "exact_message": true,
+        "file": "0900.png",
+        "psnr": 40.17692565917969,
+        "sha256": "06717f2a8f5d21fcec9a9229a7ecaab44dec0343406a59464382f5c4fdea3023",
+        "ssim": 0.999390184879303,
+        "wrong_key_bit_accuracy": 0.3125
+      }
+    ],
+    "training": {
+      "final_batch_bit_accuracy": 1.0,
+      "mean_bit": 0.1760217848420143,
+      "mean_fidelity_excess": 2.5460995675530285e-07,
+      "mean_gain_smoothness": 0.0007763713304011617,
+      "mean_host_prediction": 0.003349382871761918,
+      "mean_image_mse": 9.85462798125809e-05,
+      "mean_low_frequency": 4.3332102532644965e-07,
+      "mean_target_mse": 9.999999747378752e-05,
+      "mean_total": 0.18070307725667953,
+      "steps": 500.0
+    },
+    "untrained_baseline": {
+      "batches": 13,
+      "bit_accuracy": 0.996875,
+      "bit_error_rate": 0.003125,
+      "bits_per_pixel": 0.00048828125,
+      "exact_message_accuracy": 0.95,
+      "images": 100,
+      "payload_bits": 32,
+      "psnr": 40.564078674316406,
+      "residual_rms": 0.009373193830251694,
+      "ssim": 0.9990312910079956,
+      "wrong_key_bit_accuracy": 0.51125,
+      "wrong_key_exact_message_accuracy": 0.0
+    }
+  },
+  "model": {
+    "config": {
+      "hidden_channels": 32,
+      "image_size": 256,
+      "key": "wolfy024-provenance-v1",
+      "max_coefficient_delta": 0.12,
+      "message_length": 32,
+      "quantize": true
+    },
+    "parameters": 19091
+  },
+  "schema_version": 1,
+  "scope": {
+    "channel": "clean lossless PNG / in-memory 8-bit quantization",
+    "corruption_attacks": "not supported or evaluated",
+    "jpeg": "not supported or evaluated"
+  }
+}
