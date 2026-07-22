@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "keyed-spectral-watermark"
+version = "0.1.0"
+description = "Blind keyed provenance watermarks with learned block-DCT host cancellation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "Wolfy024"}]
+dependencies = [
+  "numpy>=1.26",
+  "Pillow>=10",
+  "torch>=2.3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8",
+  "ruff>=0.6",
+]
+
+[project.scripts]
+spectral-watermark = "neural_watermark.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["neural_watermark*"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+exclude = ["legacy"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
