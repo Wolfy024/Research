@@ -15,6 +15,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from matplotlib.colors import ListedColormap
+from matplotlib.patches import Rectangle
 from torch.utils.data import Subset
 
 from neural_watermark.data import ImageFolderDataset
@@ -287,6 +289,253 @@ def render_qualitative(
     plt.close(figure)
 
 
+def payload_hex(values: torch.Tensor) -> str:
+    bit_string = "".join(
+        str(int(value)) for value in values.detach().to(torch.int8).cpu().tolist()
+    )
+    return f"{int(bit_string, 2):08x}"
+
+
+def render_bit_grid(
+    axis: plt.Axes,
+    values: torch.Tensor,
+    *,
+    target: torch.Tensor | None = None,
+    border_color: str = GRID,
+) -> None:
+    grid = values.detach().to(torch.int8).cpu().numpy().reshape(4, 8)
+    expected = None
+    if target is not None:
+        expected = target.detach().to(torch.int8).cpu().numpy().reshape(4, 8)
+
+    axis.imshow(
+        grid,
+        cmap=ListedColormap(["#E8EDF5", BLUE]),
+        vmin=0,
+        vmax=1,
+        interpolation="nearest",
+    )
+    axis.set_xticks(np.arange(-0.5, 8, 1), minor=True)
+    axis.set_yticks(np.arange(-0.5, 4, 1), minor=True)
+    axis.grid(which="minor", color="white", linewidth=1.5)
+    axis.tick_params(
+        which="both",
+        bottom=False,
+        left=False,
+        labelbottom=False,
+        labelleft=False,
+    )
+    for row in range(4):
+        for column in range(8):
+            value = int(grid[row, column])
+            axis.text(
+                column,
+                row,
+                str(value),
+                ha="center",
+                va="center",
+                color="white" if value else INK,
+                fontsize=9,
+                fontweight="bold",
+            )
+            if expected is not None and value != int(expected[row, column]):
+                axis.add_patch(
+                    Rectangle(
+                        (column - 0.5, row - 0.5),
+                        1,
+                        1,
+                        fill=False,
+                        edgecolor=GOLD,
+                        linewidth=2.4,
+                    )
+                )
+                axis.text(
+                    column + 0.29,
+                    row - 0.27,
+                    "×",
+                    ha="center",
+                    va="center",
+                    color=GOLD,
+                    fontsize=8,
+                    fontweight="bold",
+                )
+    axis.add_patch(
+        Rectangle(
+            (-0.5, -0.5),
+            8,
+            4,
+            fill=False,
+            edgecolor=border_color,
+            linewidth=2.0,
+        )
+    )
+    for spine in axis.spines.values():
+        spine.set_visible(False)
+
+
+@torch.inference_mode()
+def render_key_recovery_examples(
+    model: NeuralWatermarker,
+    dataset: ImageFolderDataset,
+    metrics: dict[str, object],
+    output: Path,
+    device: torch.device,
+    dpi: int = 180,
+) -> list[dict[str, object]]:
+    """Render actual target, matching-key, and wrong-key payload recovery."""
+    model.eval()
+    wrong_key_model = NeuralWatermarker(
+        replace(model.config, key=model.config.key + "::wrong-key")
+    ).to(device)
+    wrong_key_model.load_state_dict(model.state_dict())
+    wrong_key_model.eval()
+
+    indices = [0, len(dataset) // 2, len(dataset) - 1]
+    generator = torch.Generator().manual_seed(2407)
+    cohort_bits = random_bits(
+        len(dataset),
+        model.config.message_length,
+        device,
+        generator,
+    )
+    bits = cohort_bits[indices]
+    covers = torch.stack([dataset[index] for index in indices]).to(device)
+    outputs = model(covers, bits)
+    marked = outputs["watermarked"]
+    correct = outputs["logits"] >= 0
+    wrong = wrong_key_model.reveal_details(marked)["logits"] >= 0
+
+    figure, axes = plt.subplots(
+        3,
+        4,
+        figsize=(14.8, 8.4),
+        facecolor=BACKGROUND,
+        gridspec_kw={"width_ratios": [1.08, 1, 1, 1]},
+    )
+    titles = [
+        "Watermarked PNG",
+        "Embedded ID",
+        "Matching-key recovery",
+        "Wrong-key recovery",
+    ]
+    for column, title in enumerate(titles):
+        axes[0, column].set_title(
+            title,
+            fontsize=12,
+            fontweight="bold",
+            color=INK,
+            pad=16,
+        )
+
+    example_records: list[dict[str, object]] = []
+    for row, index in enumerate(indices):
+        axes[row, 0].imshow(marked[row].permute(1, 2, 0).cpu())
+        axes[row, 0].axis("off")
+        render_bit_grid(axes[row, 1], bits[row], border_color=INK)
+        render_bit_grid(
+            axes[row, 2],
+            correct[row],
+            target=bits[row],
+            border_color=BLUE,
+        )
+        render_bit_grid(
+            axes[row, 3],
+            wrong[row],
+            target=bits[row],
+            border_color=GOLD,
+        )
+        axes[row, 1].set_xlabel(
+            f"0x{payload_hex(bits[row])}",
+            color=INK,
+            fontsize=9,
+            fontfamily="monospace",
+            labelpad=5,
+        )
+        axes[row, 2].set_xlabel(
+            f"0x{payload_hex(correct[row])}",
+            color=BLUE,
+            fontsize=9,
+            fontfamily="monospace",
+            labelpad=5,
+        )
+        axes[row, 3].set_xlabel(
+            f"0x{payload_hex(wrong[row])}",
+            color=INK,
+            fontsize=9,
+            fontfamily="monospace",
+            labelpad=5,
+        )
+
+        fidelity = psnr(covers[row : row + 1], marked[row : row + 1]).item()
+        similarity = global_ssim(covers[row : row + 1], marked[row : row + 1]).item()
+        correct_accuracy = (correct[row] == bits[row].bool()).float().mean().item()
+        wrong_accuracy = (wrong[row] == bits[row].bool()).float().mean().item()
+        axes[row, 0].text(
+            0.5,
+            -0.06,
+            f"{dataset.paths[index].name} · {fidelity:.2f} dB · SSIM {similarity:.6f}",
+            transform=axes[row, 0].transAxes,
+            color=INK,
+            fontsize=8,
+            ha="center",
+            va="top",
+        )
+        example_records.append(
+            {
+                "dataset_index": index,
+                "file": dataset.paths[index].name,
+                "sha256": file_digest(dataset.paths[index]),
+                "psnr": fidelity,
+                "ssim": similarity,
+                "target_hex": payload_hex(bits[row]),
+                "matching_key_hex": payload_hex(correct[row]),
+                "wrong_key_hex": payload_hex(wrong[row]),
+                "matching_key_bit_accuracy": correct_accuracy,
+                "wrong_key_bit_accuracy": wrong_accuracy,
+            }
+        )
+
+    exact_messages = round(
+        float(metrics["exact_message_accuracy"]) * int(metrics["images"])
+    )
+    wrong_exact_messages = round(
+        float(metrics["wrong_key_exact_message_accuracy"]) * int(metrics["images"])
+    )
+    figure.suptitle(
+        "Blind payload recovery from the same watermarked PNG",
+        x=0.06,
+        y=0.985,
+        ha="left",
+        fontsize=19,
+        fontweight="bold",
+        color=INK,
+    )
+    figure.text(
+        0.06,
+        0.02,
+        f"Matching key: {float(metrics['bit_accuracy']) * 100:.2f}% bits · "
+        f"{exact_messages}/{int(metrics['images'])} exact IDs   |   "
+        f"Wrong key: {float(metrics['wrong_key_bit_accuracy']) * 100:.2f}% bits · "
+        f"{wrong_exact_messages}/{int(metrics['images'])} exact IDs   |   "
+        "gold × = mismatch",
+        color=INK,
+        fontsize=10,
+        fontweight="bold",
+    )
+    figure.text(
+        0.06,
+        0.002,
+        "Fixed, unselected DIV2K examples · 32-bit IDs shown row-major · "
+        "neither decoder receives the cover",
+        color=MUTED,
+        fontsize=9,
+    )
+    figure.tight_layout(rect=(0.07, 0.065, 1, 0.90), h_pad=1.8, w_pad=1.4)
+    figure.savefig(output, dpi=dpi, bbox_inches="tight")
+    plt.close(figure)
+    return example_records
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-dir", required=True)
@@ -416,13 +665,27 @@ def main() -> None:
             "chart": "histogram with median reference",
             "source": "metrics.per_image[].psnr",
         },
+        "key_recovery_examples": {
+            "question": (
+                "What payload does each decoder key recover from the same PNG?"
+            ),
+            "chart": "fixed examples with watermarked image and 32-bit payload grids",
+            "source": "recovery_examples and metrics.final",
+        },
     }
-    write_json(output_dir / "showcase.json", record)
     render_key_chart(final, asset_dir / "key_separation.png")
     render_fidelity_chart(records, asset_dir / "fidelity_distribution.png")
     render_qualitative(
         model, eval_dataset, asset_dir / "qualitative_examples.png", device
     )
+    record["recovery_examples"] = render_key_recovery_examples(
+        model,
+        eval_dataset,
+        final,
+        asset_dir / "key_recovery_examples.png",
+        device,
+    )
+    write_json(output_dir / "showcase.json", record)
 
     summary = {
         "checkpoint": str(checkpoint),

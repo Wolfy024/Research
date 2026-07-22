@@ -5,6 +5,11 @@
       "question": "How does visual fidelity vary across the holdout?",
       "source": "metrics.per_image[].psnr"
     },
+    "key_recovery_examples": {
+      "chart": "fixed examples with watermarked image and 32-bit payload grids",
+      "question": "What payload does each decoder key recover from the same PNG?",
+      "source": "recovery_examples and metrics.final"
+    },
     "key_separation": {
       "chart": "two-category horizontal bar with chance reference",
       "question": "Does the matching key recover more bits than a wrong key?",
@@ -984,6 +989,44 @@
     },
     "parameters": 19091
   },
+  "recovery_examples": [
+    {
+      "dataset_index": 0,
+      "file": "0801.png",
+      "matching_key_bit_accuracy": 1.0,
+      "matching_key_hex": "c5a88182",
+      "psnr": 39.930206298828125,
+      "sha256": "ab5cf6a1cac2d1c2d0792dbd274fd2e53e42118ab6537771a825fd87aa28a60c",
+      "ssim": 0.9990823864936829,
+      "target_hex": "c5a88182",
+      "wrong_key_bit_accuracy": 0.46875,
+      "wrong_key_hex": "78b6b0d8"
+    },
+    {
+      "dataset_index": 50,
+      "file": "0851.png",
+      "matching_key_bit_accuracy": 1.0,
+      "matching_key_hex": "443e0ece",
+      "psnr": 40.478092193603516,
+      "sha256": "1c4bc95887a3c06f9690fec153d5548ec52039c8ba83da749f2b5f6e0d2ecf33",
+      "ssim": 0.9992711544036865,
+      "target_hex": "443e0ece",
+      "wrong_key_bit_accuracy": 0.5,
+      "wrong_key_hex": "3ca752a2"
+    },
+    {
+      "dataset_index": 99,
+      "file": "0900.png",
+      "matching_key_bit_accuracy": 1.0,
+      "matching_key_hex": "6b03e717",
+      "psnr": 40.17692565917969,
+      "sha256": "06717f2a8f5d21fcec9a9229a7ecaab44dec0343406a59464382f5c4fdea3023",
+      "ssim": 0.9993901252746582,
+      "target_hex": "6b03e717",
+      "wrong_key_bit_accuracy": 0.3125,
+      "wrong_key_hex": "901614a9"
+    }
+  ],
   "schema_version": 1,
   "scope": {
     "channel": "clean lossless PNG / in-memory 8-bit quantization",

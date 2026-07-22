@@ -49,23 +49,28 @@ The fixed filenames and SHA-256 hashes are in
 </table>
 
 The correct key recovers nearly every payload bit; a wrong key stays near the
-50% random-guess baseline. Fidelity is concentrated around the configured
-40 dB budget rather than selected from a best-case sample.
+50% random-guess baseline. Across the fixed 100-image cohort, fidelity is
+concentrated around the configured 40 dB budget.
 
-## What is different here?
+## Payload recovery by key
 
-This is not another generic convolutional encoder/decoder and it is deliberately
-different from [Wolfy024/Stego_1](https://github.com/Wolfy024/Stego_1).
+![Three watermarked DIV2K examples with embedded 32-bit IDs, exact matching-key decodes, and wrong-key decodes near chance](assets/key_recovery_examples.png)
 
-| SpectralMark (this repository) | Stego_1 |
-|---|---|
-| 32-bit provenance ID | Complete 256×256 RGB secret image |
-| User-keyed block/frequency/polarity assignment | Keyless reveal with a fixed latent |
-| Orthonormal 8×8 block DCT | Haar DWT/IWT |
-| Learned texture gain + host-interference predictor | Invertible affine coupling network |
-| Non-invertible blind correlation decoder | Reverse pass reconstructs the secret image |
-| 19K learned parameters | 4.17M inference parameters |
-| Clean lossless-PNG scope | Full-image clean-channel steganography |
+<p align="center"><sub>Actual checkpoint outputs for three fixed, unselected DIV2K images. The recovered output is a 32-bit provenance ID shown as 4×8 bit cells, not an RGB reconstruction. Both decoders receive the same watermarked PNG and no cover; each gold × marks a bit mismatch.</sub></p>
+
+## Technical contributions
+
+- **Balanced keyed carriers.** A BLAKE2b-derived seed maps all 1,024 image
+  blocks evenly across 32 payload bits, then assigns one of ten mid-frequency
+  DCT coordinates and a BPSK polarity to each block.
+- **Content-adaptive embedding.** A compact CNN predicts a bounded positive
+  coefficient gain for every 8×8 block from local image texture.
+- **Blind host cancellation.** The decoder predicts each natural carrier value
+  from the other 63 DCT coefficients, subtracts it, de-spreads the keyed
+  observations, and averages all repeats for each bit.
+- **Quantization-aware optimization.** Straight-through 8-bit quantization is
+  included during training while bit BCE, PSNR-budget excess, host prediction,
+  low-frequency residual leakage, and gain-map smoothness are optimized jointly.
 
 ## Architecture
 
@@ -101,8 +106,7 @@ flowchart LR
 
 The joint objective combines bit BCE, a hinge above the configured PSNR
 budget, host-coefficient prediction, low-frequency residual leakage, and
-gain-map smoothness. There is no GAN, wavelet transform, secret-image payload,
-or simulated corruption layer.
+gain-map smoothness.
 
 ## Quick start
 
@@ -121,7 +125,8 @@ python -m neural_watermark smoke
 ~~~
 
 The smoke command trains on procedural textures only to validate installation
-and gradient flow. Its output is explicitly not eligible for headline results.
+and gradient flow. Reported metrics use the committed COCO/DIV2K evaluation
+rather than the procedural smoke dataset.
 
 ## Embed and extract
 
@@ -216,7 +221,6 @@ checkpoints/         small reproducible showcase checkpoint
 results/             manifest and machine-readable evidence
 assets/              charts and actual model outputs
 tests/               CPU-friendly regression suite
-legacy/              archived pre-project experiments
 ~~~
 
 ## Scope and limitations
@@ -233,13 +237,6 @@ legacy/              archived pre-project experiments
   dataset terms.
 
 For threat-model details, read [SECURITY.md](SECURITY.md).
-
-## Legacy research
-
-The original autoencoder, unfinished image-hiding, GAN, and encryption
-experiments are preserved under [legacy/](legacy/). They are excluded from the
-installable package and CI. Previously stated 41/45 dB and SSIM figures had no
-reproducible evaluation artifacts and are not used by this project.
 
 ## License
 
